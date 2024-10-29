@@ -2,7 +2,6 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
-import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -20,12 +19,19 @@ class JsonParserTest {
     }
 
     @Test
+    void doubleNumber() {
+        assertEquals(234.67, parser.parse("234.67"));
+    }
+
+    @Test
     void string() {
         assertEquals("hello", parser.parse("\"hello\""));
     }
+
 
 //    @Test
 //    void emptyArray() {
 //        assertEquals(emptyList(), parser.parse("[]"));
 //    }
+
 }
