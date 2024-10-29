@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class JsonParserTest {
     JsonParser parser = new JsonParser();
 
+    //todo add test exeptions
     @Test
     void jsonNull() {
         //todo does not work with anull or nulla
