@@ -18,12 +18,12 @@ public class JsonParser {
 
     public Object parse(Reader input) throws IOException {
         int n;
-        char prev;
+        char prev = ' ';
         while ((n = input.read()) != -1) {
 
             char c = (char) n;
-            if (c == 'n') return checkNull(input);
-            if (Character.isDigit(c)) return checkNumber(input, c);
+            if (c == 'n' && prev == ' ') return checkNull(input);
+            if (Character.isDigit(c) && prev == ' ') return checkNumber(input, c);
 
 //            if (c == '"') return checkString(input);
 //            if (c == '{') return checkObject(input);
@@ -35,8 +35,13 @@ public class JsonParser {
     }
 
     private Object checkNull(Reader value) throws IOException {
+        if (value.read() == 'u' && value.read() == 'l' && value.read() == 'l') {
+            int nextChar = value.read();
+            if (nextChar == -1 || (nextChar == ' ' || nextChar == ',')) {
+                return null;
+            }
+        }
 
-        if (value.read() == 'u' && value.read() == 'l' && value.read() == 'l') return null;
         throw new IllegalArgumentException("Oh nooo! No Null");
     }
 
