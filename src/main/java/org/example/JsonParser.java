@@ -3,6 +3,8 @@ package org.example;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /// * language=json */
 public class JsonParser {
@@ -25,10 +27,10 @@ public class JsonParser {
             if (Character.isDigit(c) && prev == ' ') return parseNumber(input, c);
 
             if (c == '"') return parseString(input);
-//            if (c == '[' && prev == ' ') return parseArray(input);
+            if (c == '[' && prev == ' ') return parseArray(input);
 //            if (c == '{') return parseObject(input);
 //
-            if (c == 't' ) return parseTrue(input);
+            if (c == 't') return parseTrue(input);
             if (c == 'f') return parseFalse(input);
             prev = c;
         }
@@ -43,7 +45,7 @@ public class JsonParser {
             }
         }
 
-            throw new IllegalArgumentException("Oh nooo! Not true");
+        throw new IllegalArgumentException("Oh nooo! Not true");
     }
 
     private Boolean parseFalse(Reader value) throws IOException {
@@ -57,20 +59,26 @@ public class JsonParser {
         throw new IllegalArgumentException("Oh nooo! Not false");
     }
 
-//    private List<Object> parseArray(Reader input) throws IOException {
-//        List<Object> a = new ArrayList<>();
-//        StringBuilder line = new StringBuilder();
-//        int n;
-//
-//        while ((n = input.read()) != -1) {
-//            if ((char) n == ']') break;
-//            line.append((char) n);
-//        }
-//        if (n == -1) throw new IllegalArgumentException("Oh nooo! Not a Array");
-//        Object rec = parse(new StringReader(line.toString()));
-//        a = a.add(rec);
-//        return line.toString().length() > 0 ?  : a;
-//    }
+    private List<Object> parseArray(Reader input) throws IOException {
+        List<Object> a = new ArrayList<>();
+        StringBuilder line = new StringBuilder();
+
+        int n;
+        while ((n = input.read()) != -1) {
+            if ((char) n == ']') {
+                if (!line.isEmpty()) a.add(parse(line.toString()));
+                break;
+            }
+
+            if (n == ',') {
+                a.add(parse(line.toString()));
+                line.setLength(0);
+            }
+            line.append((char) n);
+        }
+        if (n == -1) throw new IllegalArgumentException("Oh nooo! Not a Array");
+        return a;
+    }
 
     private Object parseNull(Reader value) throws IOException {
         if (value.read() == 'u' && value.read() == 'l' && value.read() == 'l') {
@@ -117,7 +125,7 @@ public class JsonParser {
             if ((char) n == '"') break;
             line.append((char) n);
         }
-        if(n==-1) throw new IllegalArgumentException("Oh nooo! Not a String");
+        if (n == -1) throw new IllegalArgumentException("Oh nooo! Not a String");
 
         return line.toString();
     }

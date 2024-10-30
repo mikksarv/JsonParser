@@ -2,6 +2,10 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,6 +26,7 @@ class JsonParserTest {
 
     @Test
     void integer() {
+        //todo negative values
         assertEquals(123, parser.parse("123"));
         assertThrows(IllegalArgumentException.class, () -> parser.parse("1.2.3.4"));
         assertThrows(IllegalArgumentException.class, () -> parser.parse("1..67"));
@@ -40,7 +45,6 @@ class JsonParserTest {
         assertEquals("hello", parser.parse("\"hello\""));
         assertThrows(IllegalArgumentException.class, () -> parser.parse("\"hello"));
         assertThrows(IllegalArgumentException.class, () -> parser.parse("hello\""));
-
     }
 
     @Test
@@ -50,9 +54,14 @@ class JsonParserTest {
     }
 
     @Test
-    void emptyArray() {
+    void array() {
         assertEquals(emptyList(), parser.parse("[]"));
-        assertEquals(emptyList(), parser.parse("[1, 2]"));
+        assertEquals(new ArrayList<>(List.of(1)), parser.parse("[1]"));
+        assertEquals(new ArrayList<>(Arrays.asList(1, 2)), parser.parse("[1, 2]"));
+        assertEquals(new ArrayList<>(Arrays.asList(1, 2, 3)), parser.parse("[1, 2, 3]"));
+        assertEquals(new ArrayList<>(Arrays.asList(1, true)), parser.parse("[1, true]"));
+
+
     }
 
 

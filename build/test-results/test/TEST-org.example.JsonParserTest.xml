@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.example.JsonParserTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-10-30T09:10:51" hostname="vali-it-4" time="0.014">
+<testsuite name="org.example.JsonParserTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-10-30T09:45:37" hostname="vali-it-4" time="0.017">
   <properties/>
-  <testcase name="bool()" classname="org.example.JsonParserTest" time="0.014"/>
-  <system-out><![CDATA[]]></system-out>
+  <testcase name="array()" classname="org.example.JsonParserTest" time="0.017"/>
+  <system-out><![CDATA[[]
+[1]
+[1, 2]
+[1, 2, 3]
+[1, true]
+]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
