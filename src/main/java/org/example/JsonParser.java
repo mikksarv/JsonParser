@@ -25,13 +25,52 @@ public class JsonParser {
             if (Character.isDigit(c) && prev == ' ') return parseNumber(input, c);
 
             if (c == '"') return parseString(input);
-//            if (c == '{') return checkObject(input);
-//            if (c == '[') return checkArray(input);
-//            if (c == 't' || c == 'f') return checkBool(input);
+//            if (c == '[' && prev == ' ') return parseArray(input);
+//            if (c == '{') return parseObject(input);
+//
+            if (c == 't' ) return parseTrue(input);
+            if (c == 'f') return parseFalse(input);
             prev = c;
         }
         throw new IllegalArgumentException("Oh nooo!");
     }
+
+    private Boolean parseTrue(Reader value) throws IOException {
+        if (value.read() == 'r' && value.read() == 'u' && value.read() == 'e') {
+            int nextChar = value.read();
+            if (nextChar == -1 || (nextChar == ' ' || nextChar == ',')) {
+                return true;
+            }
+        }
+
+            throw new IllegalArgumentException("Oh nooo! Not true");
+    }
+
+    private Boolean parseFalse(Reader value) throws IOException {
+        if (value.read() == 'a' && value.read() == 'l' && value.read() == 's' && value.read() == 'e') {
+            int nextChar = value.read();
+            if (nextChar == -1 || (nextChar == ' ' || nextChar == ',')) {
+                return false;
+            }
+        }
+
+        throw new IllegalArgumentException("Oh nooo! Not false");
+    }
+
+//    private List<Object> parseArray(Reader input) throws IOException {
+//        List<Object> a = new ArrayList<>();
+//        StringBuilder line = new StringBuilder();
+//        int n;
+//
+//        while ((n = input.read()) != -1) {
+//            if ((char) n == ']') break;
+//            line.append((char) n);
+//        }
+//        if (n == -1) throw new IllegalArgumentException("Oh nooo! Not a Array");
+//        Object rec = parse(new StringReader(line.toString()));
+//        a = a.add(rec);
+//        return line.toString().length() > 0 ?  : a;
+//    }
 
     private Object parseNull(Reader value) throws IOException {
         if (value.read() == 'u' && value.read() == 'l' && value.read() == 'l') {

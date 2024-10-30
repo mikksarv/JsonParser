@@ -44,15 +44,17 @@ class JsonParserTest {
     }
 
     @Test
-    void emptyArray() {
-        assertEquals(emptyList(), parser.parse("[]"));
-    }
-
-    @Test
     void bool() {
         assertEquals(true, parser.parse("true"));
         assertEquals(false, parser.parse("false"));
     }
+
+    @Test
+    void emptyArray() {
+        assertEquals(emptyList(), parser.parse("[]"));
+        assertEquals(emptyList(), parser.parse("[1, 2]"));
+    }
+
 
     @Test
     void emptyObject() {
