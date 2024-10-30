@@ -2,7 +2,6 @@ package org.example;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.Serializable;
 import java.io.StringReader;
 
 /// * language=json */
@@ -22,10 +21,10 @@ public class JsonParser {
         while ((n = input.read()) != -1) {
 
             char c = (char) n;
-            if (c == 'n' && prev == ' ') return checkNull(input);
-            if (Character.isDigit(c) && prev == ' ') return checkNumber(input, c);
+            if (c == 'n' && prev == ' ') return parseNull(input);
+            if (Character.isDigit(c) && prev == ' ') return parseNumber(input, c);
 
-//            if (c == '"') return checkString(input);
+            if (c == '"') return parseString(input);
 //            if (c == '{') return checkObject(input);
 //            if (c == '[') return checkArray(input);
 //            if (c == 't' || c == 'f') return checkBool(input);
@@ -34,7 +33,7 @@ public class JsonParser {
         throw new IllegalArgumentException("Oh nooo!");
     }
 
-    private Object checkNull(Reader value) throws IOException {
+    private Object parseNull(Reader value) throws IOException {
         if (value.read() == 'u' && value.read() == 'l' && value.read() == 'l') {
             int nextChar = value.read();
             if (nextChar == -1 || (nextChar == ' ' || nextChar == ',')) {
@@ -45,7 +44,7 @@ public class JsonParser {
         throw new IllegalArgumentException("Oh nooo! No Null");
     }
 
-    private Object checkNumber(Reader value, char first) throws IOException {
+    private Number parseNumber(Reader value, char first) throws IOException {
 
         StringBuilder line = new StringBuilder();
         line.append(first);
@@ -56,11 +55,11 @@ public class JsonParser {
             else if (!Character.isDigit(c)) break;
             if (Character.isDigit(c)) line.append(c);
         }
-        return readNumType(line);
+        return parseNumber(line);
     }
 
 
-    private static Number readNumType(StringBuilder line) {
+    private static Number parseNumber(StringBuilder line) {
         int dots = (int) line.toString().chars().filter(c -> c == '.').count();
         if (!line.toString().contains(".")) {
             return Integer.valueOf(line.toString());
@@ -71,8 +70,17 @@ public class JsonParser {
         }
     }
 
-    private Object checkString(Reader input) {
-        return "";
+    private String parseString(Reader input) throws IOException {
+        StringBuilder line = new StringBuilder();
+        int n;
+
+        while ((n = input.read()) != -1) {
+            if ((char) n == '"') break;
+            line.append((char) n);
+        }
+        if(n==-1) throw new IllegalArgumentException("Oh nooo! Not a String");
+
+        return line.toString();
     }
 
 }

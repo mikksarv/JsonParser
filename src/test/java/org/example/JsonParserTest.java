@@ -38,6 +38,9 @@ class JsonParserTest {
     @Test
     void string() {
         assertEquals("hello", parser.parse("\"hello\""));
+        assertThrows(IllegalArgumentException.class, () -> parser.parse("\"hello"));
+        assertThrows(IllegalArgumentException.class, () -> parser.parse("hello\""));
+
     }
 
     @Test
