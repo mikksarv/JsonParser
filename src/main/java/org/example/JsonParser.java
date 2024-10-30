@@ -3,8 +3,7 @@ package org.example;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /// * language=json */
 public class JsonParser {
@@ -27,13 +26,62 @@ public class JsonParser {
             if (Character.isDigit(c) && prev == ' ') return parseNumber(input, c);
             if (c == '"') return parseString(input);
             if (c == '[' && prev == ' ') return parseArray(input);
-//
             if (c == 't') return parseTrue(input);
             if (c == 'f') return parseFalse(input);
-//            if (c == '{') return parseObject(input);
+            if (c == '{') return parseObject(input);
             prev = c;
         }
         throw new IllegalArgumentException("Oh nooo!");
+    }
+
+    private Object parseObject(Reader input) throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        StringBuilder line = new StringBuilder();
+        int counter = 1;
+        int n;
+        while ((n = input.read()) != -1) {
+
+            if (n == '{') counter++;
+            if (n == '}') counter--;
+
+            if ((char) n == '}' && counter == 0) {
+                if (!line.isEmpty()) {
+                    String[] x =  line.toString().split(": ", 2);
+                    String key = (String) parse(x[0]);
+                    Object value =  parse(x[1]);
+                    map.put(key, value);
+                }
+                 break;
+            }
+            if ((char) n == '}' && counter > 0) {
+                if (!line.isEmpty()) {
+                    line.append('}');
+                    String[] x =  line.toString().split(": ", 2);
+                    String key = (String) parse(x[0]);
+                    Object value =  parse(x[1]);
+                    map.put(key, value);
+//                    line.setLength(0);
+                    continue;
+                }
+            }
+            System.out.println(counter+" "+(char)n+ " ."+ line.toString());
+            if (n == ',') {
+                String[] x =  line.toString().split(": ");
+                String key = (String) parse(x[0]);
+                Object value =  parse(x[1]);
+                map.put(key, value);
+                line.setLength(0);
+            }
+            line.append((char) n);
+
+
+        }
+        System.out.println(map +" " +counter + " teskt siia");
+        if (n == -1) throw new IllegalArgumentException("Oh nooo! Not a Map");
+
+        return map;
+
+
     }
 
     private Boolean parseTrue(Reader value) throws IOException {
@@ -132,3 +180,39 @@ public class JsonParser {
 }
 
 
+
+
+
+
+
+
+//            if (counter == 0) {
+//                if (line.length() > 1) {
+//                    // Process the line as a whole object now
+//                    String content = line.substring(1, line.length() - 1).trim(); // Remove outer braces
+//                    String[] pairs = content.split(",\\s*"); // Split by comma, allowing for whitespace
+//
+//                    for (String pair : pairs) {
+//                        String[] x = pair.split(":\\s*", 2); // Split by colon, allowing for whitespace and limiting to 2 parts
+//                        String key = (String) parse(x[0].trim());
+//                        Object value = parse(x[1].trim());
+//                        map.put(key, value);
+//                    }
+//                }
+//                break;
+//            }
+//
+//            if (counter > 0 && (char) n == ',') {
+//                if (line.length() > 1) {
+//                    // Process the line as a whole object now
+//                    String content = line.substring(1, line.length() - 1).trim(); // Remove outer braces
+//                    String[] pairs = content.split(",\\s*"); // Split by comma, allowing for whitespace
+//
+//                    for (String pair : pairs) {
+//                        String[] x = pair.split(":\\s*", 2); // Split by colon, allowing for whitespace and limiting to 2 parts
+//                        String key = (String) parse(x[0].trim());
+//                        Object value = parse(x[1].trim());
+//                        map.put(key, value);
+//                    }
+//                }
+//            }

@@ -2,9 +2,7 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -66,8 +64,111 @@ class JsonParserTest {
 
 
     @Test
-    void emptyObject() {
+    void object() {
         assertEquals(emptyMap(), parser.parse("{}"));
 
+        Map<String, Object> expectedMap = new HashMap<>();
+        expectedMap.put("key", 1);
+        assertEquals(expectedMap, parser.parse("{\"key\": 1}"));
+        expectedMap.clear();
+        expectedMap.put("name", "value");
+        assertEquals(expectedMap, parser.parse("{\"name\": \"value\"}"));
     }
+
+    @Test
+    void mixedTestTypeThird() {
+
+        Map<String, Object> employee = new HashMap<>();
+        employee.put("id", 34);
+        employee.put("gt", 35);
+
+        assertEquals(employee, parser.parse("""
+                {
+                    "id": 34,
+                    "gt": 35
+                }
+                """));
+    }
+
+    @Test
+    void stringObject() {
+        Map<String, Object> expectedMap = new HashMap<>();
+
+        Map<String, Object> employee = new HashMap<>();
+        employee.put("id", 34);
+
+        expectedMap.put("employee", employee);
+
+        assertEquals(expectedMap, parser.parse("""
+                {
+                    "employee": {
+                        "id": 34
+                    }
+                }
+                """));
+    }
+
+    @Test
+    void mixedTestType() {
+        Map<String, Object> expectedMap = new HashMap<>();
+
+        Map<String, Object> employee = new HashMap<>();
+        employee.put("id", 34);
+
+        expectedMap.put("e", employee);
+        expectedMap.put("isFullTime", true);
+
+        assertEquals(expectedMap, parser.parse("""
+                {
+                    "e": {
+                        "id": 34
+                    },
+                    "isFullTime": true
+                }
+                """));
+    }
+
+
+
+//    @Test
+//    void mixedTestType() {
+//        Map<String, Object> expectedMap = new HashMap<>();
+//
+//        Map<String, Object> employee = new HashMap<>();
+//        employee.put("id", 34);
+//        employee.put("shoe size", "56.6"); // corrected to string for proper JSON format
+//        employee.put("name", "Johnson Burger");
+//        employee.put("department", "Hamburger engineer");
+//        employee.put("skills", List.of("Flipping", "Cleaning", "Fork master"));
+//        expectedMap.put("employee", employee);
+//        expectedMap.put("isFullTime", true);
+//
+//        assertEquals(expectedMap, parser.parse("""
+//                {
+//                    "employee": {
+//                        "id": 34,
+//                        "shoe size": 56.6,
+//                        "name": "Johnson Burger",
+//                        "department": "Hamburger engineer",
+//                        "skills": ["Flipping", "Cleaning", "Fork master"]
+//                    },
+//                    "isFullTime": true
+//                }
+//                """));
+//    }
+
+//    @Test
+//    void mixedTestTypeSecond() {
+//        Map<String, Object> expectedMap = new HashMap<>();
+//
+//        Map<String, Object> employee = new HashMap<>();
+//        employee.put("id", 34);
+//        employee.put("shoe size", "56.6"); // corrected to string for proper JSON format
+//        employee.put("name", "Johnson Burger");
+//        employee.put("department", "Hamburger engineer");
+//        employee.put("skills", List.of("Flipping", "Cleaning", "Fork master"));
+//        expectedMap.put("employee", employee);
+//        expectedMap.put("isFullTime", true);
+//        assertEquals(expectedMap, parser.parse("{\"employee\":{\"id\":34,\"shoe size\":56.6,\"name\":\"Johnson Burger\",\"department\":\"Hamburger engineer\",\"skills\":[\"Flipping\",\"Cleaning\",\"Fork master\"]},\"isFullTime\":true}"));
+//    }
 }
