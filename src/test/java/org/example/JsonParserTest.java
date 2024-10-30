@@ -54,5 +54,6 @@ class JsonParserTest {
     @Test
     void emptyObject() {
         assertEquals(emptyMap(), parser.parse("{}"));
+
     }
 }
