@@ -24,6 +24,7 @@ public class JsonParser {
             char c = (char) n;
             if (c == 'n' && prev == ' ') return parseNull(input);
             if (Character.isDigit(c) && prev == ' ') return parseNumber(input, c);
+
             if (c == '"') return parseString(input);
             if (c == '[' && prev == ' ') return parseArray(input);
             if (c == 't') return parseTrue(input);
@@ -172,7 +173,7 @@ public class JsonParser {
             if ((char) n == '"') break;
             line.append((char) n);
         }
-        if (n == -1) throw new IllegalArgumentException("Oh nooo! Not a String");
+        if(n==-1) throw new IllegalArgumentException("Oh nooo! Not a String");
 
         return line.toString();
     }
