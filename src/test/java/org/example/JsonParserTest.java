@@ -14,7 +14,6 @@ class JsonParserTest {
     //todo add test exeptions
     @Test
     void jsonNull() {
-        //todo does not work with anull or nulla
         assertNull(parser.parse("null"));
         assertNull(parser.parse(" null"));
         assertNull(parser.parse("null,"));
@@ -63,17 +62,22 @@ class JsonParserTest {
 
     }
 
+    @Test
+    void startObject() {
+        assertEquals(emptyMap(), parser.parse("{}"));
+        assertThrows(IllegalArgumentException.class,
+                () -> parser.parse("{"),
+                "Oh nooo! Not a Map");
+    }
 
     @Test
     void object() {
-        assertEquals(emptyMap(), parser.parse("{}"));
-
         Map<String, Object> expectedMap = new HashMap<>();
-        expectedMap.put("key", 1);
-        assertEquals(expectedMap, parser.parse("{\"key\": 1}"));
+        expectedMap.put("key", "1");
+        assertEquals(expectedMap, parser.parse("{ \"key\": \"1\"}"));
         expectedMap.clear();
         expectedMap.put("name", "value");
-        assertEquals(expectedMap, parser.parse("{\"name\": \"value\"}"));
+        assertEquals(expectedMap, parser.parse("{\"name\":\"value\"}"));
     }
 
     @Test
@@ -82,11 +86,13 @@ class JsonParserTest {
         Map<String, Object> employee = new HashMap<>();
         employee.put("id", 34);
         employee.put("gt", 35);
+        employee.put("gsc", 356);
 
         assertEquals(employee, parser.parse("""
                 {
                     "id": 34,
-                    "gt": 35
+                    "gt": 35,
+                    "gsc": 356
                 }
                 """));
     }
@@ -117,18 +123,17 @@ class JsonParserTest {
         employee.put("id", 34);
 
         expectedMap.put("e", employee);
-        expectedMap.put("isFullTime", true);
+        expectedMap.put("i", true);
 
         assertEquals(expectedMap, parser.parse("""
                 {
                     "e": {
                         "id": 34
                     },
-                    "isFullTime": true
+                    "i": true
                 }
                 """));
     }
-
 
 
 //    @Test

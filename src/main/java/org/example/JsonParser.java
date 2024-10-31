@@ -3,7 +3,10 @@ package org.example;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /// * language=json */
 public class JsonParser {
@@ -30,6 +33,7 @@ public class JsonParser {
             if (c == 't') return parseTrue(input);
             if (c == 'f') return parseFalse(input);
             if (c == '{') return parseObject(input);
+            if (c == '}') return "}";
             prev = c;
         }
         throw new IllegalArgumentException("Oh nooo!");
@@ -37,69 +41,37 @@ public class JsonParser {
 
     private Object parseObject(Reader input) throws IOException {
         Map<String, Object> map = new HashMap<>();
-        StringBuilder line = new StringBuilder();
-        int counter = 1;
-        int n;
-        while ((n = input.read()) != -1) {
+        char n = ' ';
+        while (n != '}') {
 
-            if (n == '{') counter++;
-            if (n == '}') counter--;
+            String key = (String) parse(input);
+            if (key == "}") return map;
+            input.read();
+            Object value = parse(input);
+            map.put(key, value);
 
-            if ((char) n == '}' && counter == 0) {
-                if (!line.isEmpty()) {
-                    String[] x =  line.toString().split(": ", 2);
-                    String key = (String) parse(x[0]);
-                    Object value =  parse(x[1]);
-                    map.put(key, value);
-                }
-                 break;
-            }
-            if ((char) n == '}' && counter > 0) {
-                if (!line.isEmpty()) {
-                    line.append('}');
-                    String[] x =  line.toString().split(": ", 2);
-                    String key = (String) parse(x[0]);
-                    Object value =  parse(x[1]);
-                    map.put(key, value);
-//                    line.setLength(0);
-                    continue;
-                }
-            }
-            System.out.println(counter+" "+(char)n+ " ."+ line.toString());
-            if (n == ',') {
-                String[] x =  line.toString().split(": ");
-                String key = (String) parse(x[0]);
-                Object value =  parse(x[1]);
-                map.put(key, value);
-                line.setLength(0);
-            }
-            line.append((char) n);
-
-
+            n = (char) input.read();
+            if (n == ',') n = (char) input.read();
         }
-        System.out.println(map +" " +counter + " teskt siia");
+
         if (n == -1) throw new IllegalArgumentException("Oh nooo! Not a Map");
-
         return map;
-
-
     }
 
     private Boolean parseTrue(Reader value) throws IOException {
         if (value.read() == 'r' && value.read() == 'u' && value.read() == 'e') {
             int nextChar = value.read();
-            if (nextChar == -1 || (nextChar == ' ' || nextChar == ',')) {
+            if (nextChar == -1 || (nextChar == ' ' || nextChar == ',' || nextChar == '\n')) {
                 return true;
             }
         }
-
         throw new IllegalArgumentException("Oh nooo! Not true");
     }
 
     private Boolean parseFalse(Reader value) throws IOException {
         if (value.read() == 'a' && value.read() == 'l' && value.read() == 's' && value.read() == 'e') {
             int nextChar = value.read();
-            if (nextChar == -1 || (nextChar == ' ' || nextChar == ',')) {
+            if (nextChar == -1 || (nextChar == ' ' || nextChar == ',' || nextChar == '\n')) {
                 return false;
             }
         }
@@ -131,7 +103,7 @@ public class JsonParser {
     private Object parseNull(Reader value) throws IOException {
         if (value.read() == 'u' && value.read() == 'l' && value.read() == 'l') {
             int nextChar = value.read();
-            if (nextChar == -1 || (nextChar == ' ' || nextChar == ',')) {
+            if (nextChar == -1 || (nextChar == ' ' || nextChar == ',' || nextChar == '\n')) {
                 return null;
             }
         }
@@ -173,47 +145,8 @@ public class JsonParser {
             if ((char) n == '"') break;
             line.append((char) n);
         }
-        if(n==-1) throw new IllegalArgumentException("Oh nooo! Not a String");
+        if (n == -1) throw new IllegalArgumentException("Oh nooo! Not a String");
 
         return line.toString();
     }
-
 }
-
-
-
-
-
-
-
-
-//            if (counter == 0) {
-//                if (line.length() > 1) {
-//                    // Process the line as a whole object now
-//                    String content = line.substring(1, line.length() - 1).trim(); // Remove outer braces
-//                    String[] pairs = content.split(",\\s*"); // Split by comma, allowing for whitespace
-//
-//                    for (String pair : pairs) {
-//                        String[] x = pair.split(":\\s*", 2); // Split by colon, allowing for whitespace and limiting to 2 parts
-//                        String key = (String) parse(x[0].trim());
-//                        Object value = parse(x[1].trim());
-//                        map.put(key, value);
-//                    }
-//                }
-//                break;
-//            }
-//
-//            if (counter > 0 && (char) n == ',') {
-//                if (line.length() > 1) {
-//                    // Process the line as a whole object now
-//                    String content = line.substring(1, line.length() - 1).trim(); // Remove outer braces
-//                    String[] pairs = content.split(",\\s*"); // Split by comma, allowing for whitespace
-//
-//                    for (String pair : pairs) {
-//                        String[] x = pair.split(":\\s*", 2); // Split by colon, allowing for whitespace and limiting to 2 parts
-//                        String key = (String) parse(x[0].trim());
-//                        Object value = parse(x[1].trim());
-//                        map.put(key, value);
-//                    }
-//                }
-//            }
