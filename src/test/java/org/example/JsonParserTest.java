@@ -27,7 +27,6 @@ class JsonParserTest {
 
     @Test
     void integer() {
-        //todo negative values
         assertEquals(123, parser.parse("123"));
         assertThrows(
                 IllegalArgumentException.class,
@@ -43,12 +42,24 @@ class JsonParserTest {
                 "Oh nooo! Not a number");
     }
 
+
     @Test
     void doubleNumber() {
         assertEquals(234.67, parser.parse("234.67"));
         assertThrows(
                 IllegalArgumentException.class,
                 () -> parser.parse("1.2.3.4"),
+                "Oh nooo! Not a number");
+
+    }
+
+    @Test
+    void negativeNumbers(){
+        assertEquals(-123, parser.parse("-123"));
+        assertEquals(-234.67, parser.parse("-234.67"));
+        assertThrows(
+        IllegalArgumentException.class,
+                () -> parser.parse("--123"),
                 "Oh nooo! Not a number");
 
     }

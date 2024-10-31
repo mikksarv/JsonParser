@@ -26,7 +26,7 @@ public class JsonParser {
 
             char c = (char) n;
             if (c == 'n' && prev == ' ') return parseNull(input);
-            if (Character.isDigit(c) && prev == ' ') return parseNumber(input, c);
+            if ((Character.isDigit(c) || c=='-') && prev == ' ' ) return parseNumber(input, c);
 
             if (c == '"') return parseString(input);
             if (c == '[' && prev == ' ') return parseArray(input);
