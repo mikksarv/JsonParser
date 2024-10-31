@@ -11,37 +11,59 @@ import static org.junit.jupiter.api.Assertions.*;
 class JsonParserTest {
     JsonParser parser = new JsonParser();
 
-    //todo add test exeptions
     @Test
     void jsonNull() {
         assertNull(parser.parse("null"));
         assertNull(parser.parse(" null"));
         assertNull(parser.parse("null,"));
-        assertThrows(IllegalArgumentException.class, () -> parser.parse("nulla"));
-        assertThrows(IllegalArgumentException.class, () -> parser.parse("anull"));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> parser.parse("nulla"),
+                "Oh nooo! No Null");
+        assertThrows(IllegalArgumentException.class,
+                () -> parser.parse("anull"),
+                "Oh nooo! No Null");
     }
 
     @Test
     void integer() {
         //todo negative values
         assertEquals(123, parser.parse("123"));
-        assertThrows(IllegalArgumentException.class, () -> parser.parse("1.2.3.4"));
-        assertThrows(IllegalArgumentException.class, () -> parser.parse("1..67"));
-        assertThrows(IllegalArgumentException.class, () -> parser.parse(".346.5"));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> parser.parse("1.2.3.4"),
+                "Oh nooo! Not a number");
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> parser.parse("1..67"),
+                "Oh nooo! Not a number");
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> parser.parse(".346.5"),
+                "Oh nooo! Not a number");
     }
 
     @Test
     void doubleNumber() {
         assertEquals(234.67, parser.parse("234.67"));
-        assertThrows(IllegalArgumentException.class, () -> parser.parse("1.2.3.4"));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> parser.parse("1.2.3.4"),
+                "Oh nooo! Not a number");
 
     }
 
     @Test
     void string() {
         assertEquals("hello", parser.parse("\"hello\""));
-        assertThrows(IllegalArgumentException.class, () -> parser.parse("\"hello"));
-        assertThrows(IllegalArgumentException.class, () -> parser.parse("hello\""));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> parser.parse("\"hello"),
+                "Oh nooo! Not a String");
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> parser.parse("hello\""),
+                "Oh nooo! Not a String");
 
     }
 
@@ -49,6 +71,15 @@ class JsonParserTest {
     void bool() {
         assertEquals(true, parser.parse("true"));
         assertEquals(false, parser.parse("false"));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> parser.parse("truu"),
+                "Oh nooo! Not true");
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> parser.parse("fulse"),
+                "Oh nooo! Not false");
+
     }
 
     @Test
@@ -57,13 +88,22 @@ class JsonParserTest {
         assertEquals(new ArrayList<>(List.of(1)), parser.parse("[1]"));
         assertEquals(new ArrayList<>(Arrays.asList(1, 2)), parser.parse("[1, 2]"));
         assertEquals(new ArrayList<>(Arrays.asList(1, 2, 3)), parser.parse("[1, 2, 3]"));
-        assertEquals(new ArrayList<>(Arrays.asList(1, true)), parser.parse("[1, true]"));
-
+        assertEquals(new ArrayList<>(Arrays.asList(1, true, "hello")), parser.parse("[1, true, \"hello\"]"));
+        assertEquals(new ArrayList<>(Arrays.asList(3, 5, false, null)), parser.parse("[3, 5, false, null]"));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> parser.parse("[3, 5, false, nulla]"),
+                "Oh nooo! No Null");
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> parser.parse("[3, 5, false, null"),
+                "Oh nooo! Not a Array");
 
     }
 
+
     @Test
-    void startObject() {
+    void emptyObject() {
         assertEquals(emptyMap(), parser.parse("{}"));
         assertThrows(IllegalArgumentException.class,
                 () -> parser.parse("{"),
@@ -78,16 +118,24 @@ class JsonParserTest {
         expectedMap.clear();
         expectedMap.put("name", "value");
         assertEquals(expectedMap, parser.parse("{\"name\":\"value\"}"));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> parser.parse("{\"name\":\"value\""),
+                "Oh nooo! Not a Map");
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> parser.parse("{\"name\"\"value\"}"),
+                "Oh nooo!");
+
+
     }
 
     @Test
-    void mixedTestTypeThird() {
-
+    void objectTwo() {
         Map<String, Object> employee = new HashMap<>();
         employee.put("id", 34);
         employee.put("gt", 35);
         employee.put("gsc", 356);
-
         assertEquals(employee, parser.parse("""
                 {
                     "id": 34,
@@ -98,14 +146,11 @@ class JsonParserTest {
     }
 
     @Test
-    void stringObject() {
+    void objectThree() {
         Map<String, Object> expectedMap = new HashMap<>();
-
         Map<String, Object> employee = new HashMap<>();
         employee.put("id", 34);
-
         expectedMap.put("employee", employee);
-
         assertEquals(expectedMap, parser.parse("""
                 {
                     "employee": {
@@ -116,15 +161,12 @@ class JsonParserTest {
     }
 
     @Test
-    void mixedTestType() {
+    void objectFour() {
         Map<String, Object> expectedMap = new HashMap<>();
-
         Map<String, Object> employee = new HashMap<>();
         employee.put("id", 34);
-
         expectedMap.put("e", employee);
         expectedMap.put("i", true);
-
         assertEquals(expectedMap, parser.parse("""
                 {
                     "e": {
@@ -137,9 +179,8 @@ class JsonParserTest {
 
 
     @Test
-    void mixedTestTypeDifficult() {
+    void objectFive() {
         Map<String, Object> expectedMap = new HashMap<>();
-
         Map<String, Object> employee = new HashMap<>();
         employee.put("id", 34);
         employee.put("shoe size", 56.6);
@@ -148,7 +189,6 @@ class JsonParserTest {
         employee.put("skills", List.of("Flipping", "Cleaning", "Fork master"));
         expectedMap.put("employee", employee);
         expectedMap.put("isFullTime", true);
-
         assertEquals(expectedMap, parser.parse("""
                 {
                     "employee": {

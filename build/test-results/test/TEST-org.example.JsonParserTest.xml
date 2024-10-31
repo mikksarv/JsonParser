@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.example.JsonParserTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-10-31T11:41:02" hostname="vali-it-4" time="0.014">
+<testsuite name="org.example.JsonParserTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-10-31T12:11:18" hostname="vali-it-4" time="0.014">
   <properties/>
-  <testcase name="mixedTestTypeDifficult()" classname="org.example.JsonParserTest" time="0.014"/>
+  <testcase name="array()" classname="org.example.JsonParserTest" time="0.014"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
