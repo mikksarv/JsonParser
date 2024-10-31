@@ -1,31 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.example.JsonParserTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2024-10-31T11:36:56" hostname="vali-it-4" time="0.05">
+<testsuite name="org.example.JsonParserTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-10-31T11:41:02" hostname="vali-it-4" time="0.014">
   <properties/>
-  <testcase name="startObject()" classname="org.example.JsonParserTest" time="0.013"/>
-  <testcase name="jsonNull()" classname="org.example.JsonParserTest" time="0.002"/>
-  <testcase name="mixedTestType()" classname="org.example.JsonParserTest" time="0.008"/>
-  <testcase name="mixedTestTypeThird()" classname="org.example.JsonParserTest" time="0.002"/>
-  <testcase name="object()" classname="org.example.JsonParserTest" time="0.002"/>
-  <testcase name="string()" classname="org.example.JsonParserTest" time="0.001"/>
-  <testcase name="stringObject()" classname="org.example.JsonParserTest" time="0.003"/>
-  <testcase name="bool()" classname="org.example.JsonParserTest" time="0.001"/>
-  <testcase name="array()" classname="org.example.JsonParserTest" time="0.002"/>
-  <testcase name="doubleNumber()" classname="org.example.JsonParserTest" time="0.002"/>
-  <testcase name="integer()" classname="org.example.JsonParserTest" time="0.001"/>
-  <system-out><![CDATA[34   id
-{id=34}   e
-true   i
-{e={id=34}, i=true}
-34   id
-35   gt
-356   gsc
-{gsc=356, id=34, gt=35}
-1   key
-{key=1}
-value   name
-{name=value}
-34   id
-{id=34}   employee
-]]></system-out>
+  <testcase name="mixedTestTypeDifficult()" classname="org.example.JsonParserTest" time="0.014"/>
+  <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

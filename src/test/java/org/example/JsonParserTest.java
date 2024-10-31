@@ -136,45 +136,30 @@ class JsonParserTest {
     }
 
 
-//    @Test
-//    void mixedTestType() {
-//        Map<String, Object> expectedMap = new HashMap<>();
-//
-//        Map<String, Object> employee = new HashMap<>();
-//        employee.put("id", 34);
-//        employee.put("shoe size", "56.6"); // corrected to string for proper JSON format
-//        employee.put("name", "Johnson Burger");
-//        employee.put("department", "Hamburger engineer");
-//        employee.put("skills", List.of("Flipping", "Cleaning", "Fork master"));
-//        expectedMap.put("employee", employee);
-//        expectedMap.put("isFullTime", true);
-//
-//        assertEquals(expectedMap, parser.parse("""
-//                {
-//                    "employee": {
-//                        "id": 34,
-//                        "shoe size": 56.6,
-//                        "name": "Johnson Burger",
-//                        "department": "Hamburger engineer",
-//                        "skills": ["Flipping", "Cleaning", "Fork master"]
-//                    },
-//                    "isFullTime": true
-//                }
-//                """));
-//    }
+    @Test
+    void mixedTestTypeDifficult() {
+        Map<String, Object> expectedMap = new HashMap<>();
 
-//    @Test
-//    void mixedTestTypeSecond() {
-//        Map<String, Object> expectedMap = new HashMap<>();
-//
-//        Map<String, Object> employee = new HashMap<>();
-//        employee.put("id", 34);
-//        employee.put("shoe size", "56.6"); // corrected to string for proper JSON format
-//        employee.put("name", "Johnson Burger");
-//        employee.put("department", "Hamburger engineer");
-//        employee.put("skills", List.of("Flipping", "Cleaning", "Fork master"));
-//        expectedMap.put("employee", employee);
-//        expectedMap.put("isFullTime", true);
-//        assertEquals(expectedMap, parser.parse("{\"employee\":{\"id\":34,\"shoe size\":56.6,\"name\":\"Johnson Burger\",\"department\":\"Hamburger engineer\",\"skills\":[\"Flipping\",\"Cleaning\",\"Fork master\"]},\"isFullTime\":true}"));
-//    }
+        Map<String, Object> employee = new HashMap<>();
+        employee.put("id", 34);
+        employee.put("shoe size", 56.6);
+        employee.put("name", "Johnson Burger");
+        employee.put("department", "Hamburger engineer");
+        employee.put("skills", List.of("Flipping", "Cleaning", "Fork master"));
+        expectedMap.put("employee", employee);
+        expectedMap.put("isFullTime", true);
+
+        assertEquals(expectedMap, parser.parse("""
+                {
+                    "employee": {
+                        "id": 34,
+                        "shoe size": 56.6,
+                        "name": "Johnson Burger",
+                        "department": "Hamburger engineer",
+                        "skills": ["Flipping", "Cleaning", "Fork master"]
+                    },
+                    "isFullTime": true
+                }
+                """));
+    }
 }
