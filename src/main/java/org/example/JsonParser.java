@@ -12,8 +12,8 @@ import java.util.Map;
 public class JsonParser {
 
     public Object parse(String input) {
-        try {
-            return parse(new StringReader(input));
+        try (var reader = new StringReader(input)) {
+            return parse(reader);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -26,14 +26,16 @@ public class JsonParser {
 
             char c = (char) n;
             if (c == 'n' && prev == ' ') return parseNull(input);
-            if ((Character.isDigit(c) || c=='-') && prev == ' ' ) return parseNumber(input, c);
-
+            if ((Character.isDigit(c) || c == '-') && prev == ' ') return parseNumber(input, c);
             if (c == '"') return parseString(input);
             if (c == '[' && prev == ' ') return parseArray(input);
             if (c == 't') return parseTrue(input);
             if (c == 'f') return parseFalse(input);
             if (c == '{') return parseObject(input);
             if (c == '}') return "}";
+//            if (Character.isWhitespace(c)) {
+//                continue;
+//            }
             prev = c;
         }
         throw new IllegalArgumentException("Oh nooo!");
@@ -45,7 +47,7 @@ public class JsonParser {
         while (n != '}') {
 
             String key = (String) parse(input);
-            if (key == "}") return map;
+            if (key.equals("}")) return map;
             input.read();
             Object value = parse(input);
             map.put(key, value);
@@ -60,22 +62,16 @@ public class JsonParser {
 
     private Boolean parseTrue(Reader value) throws IOException {
         if (value.read() == 'r' && value.read() == 'u' && value.read() == 'e') {
-            int nextChar = value.read();
-            if (nextChar == -1 || (nextChar == ' ' || nextChar == ',' || nextChar == '\n')) {
-                return true;
-            }
+            if (checkNextChar(value)) return true;
         }
         throw new IllegalArgumentException("Oh nooo! Not true");
     }
 
+
     private Boolean parseFalse(Reader value) throws IOException {
         if (value.read() == 'a' && value.read() == 'l' && value.read() == 's' && value.read() == 'e') {
-            int nextChar = value.read();
-            if (nextChar == -1 || (nextChar == ' ' || nextChar == ',' || nextChar == '\n')) {
-                return false;
-            }
+            if (checkNextChar(value)) return false;
         }
-
         throw new IllegalArgumentException("Oh nooo! Not false");
     }
 
@@ -102,12 +98,8 @@ public class JsonParser {
 
     private Object parseNull(Reader value) throws IOException {
         if (value.read() == 'u' && value.read() == 'l' && value.read() == 'l') {
-            int nextChar = value.read();
-            if (nextChar == -1 || (nextChar == ' ' || nextChar == ',' || nextChar == '\n')) {
-                return null;
-            }
+            if (checkNextChar(value)) return null;
         }
-
         throw new IllegalArgumentException("Oh nooo! No Null");
     }
 
@@ -124,7 +116,6 @@ public class JsonParser {
         }
         return parseNumber(line);
     }
-
 
     private static Number parseNumber(StringBuilder line) {
         int dots = (int) line.toString().chars().filter(c -> c == '.').count();
@@ -148,5 +139,14 @@ public class JsonParser {
         if (n == -1) throw new IllegalArgumentException("Oh nooo! Not a String");
 
         return line.toString();
+    }
+
+    private static boolean checkNextChar(Reader value) throws IOException {
+        int nextChar = value.read();
+        if (nextChar == -1 || (nextChar == ' ' || nextChar == ',' || nextChar == '\n' || nextChar == '}' || nextChar == ']')) {
+
+            return true;
+        }
+        return false;
     }
 }

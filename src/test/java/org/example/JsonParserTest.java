@@ -42,7 +42,6 @@ class JsonParserTest {
                 "Oh nooo! Not a number");
     }
 
-
     @Test
     void doubleNumber() {
         assertEquals(234.67, parser.parse("234.67"));
@@ -50,18 +49,16 @@ class JsonParserTest {
                 IllegalArgumentException.class,
                 () -> parser.parse("1.2.3.4"),
                 "Oh nooo! Not a number");
-
     }
 
     @Test
-    void negativeNumbers(){
+    void negativeNumbers() {
         assertEquals(-123, parser.parse("-123"));
         assertEquals(-234.67, parser.parse("-234.67"));
         assertThrows(
-        IllegalArgumentException.class,
+                IllegalArgumentException.class,
                 () -> parser.parse("--123"),
                 "Oh nooo! Not a number");
-
     }
 
     @Test
@@ -75,7 +72,6 @@ class JsonParserTest {
                 IllegalArgumentException.class,
                 () -> parser.parse("hello\""),
                 "Oh nooo! Not a String");
-
     }
 
     @Test
@@ -90,7 +86,6 @@ class JsonParserTest {
                 IllegalArgumentException.class,
                 () -> parser.parse("fulse"),
                 "Oh nooo! Not false");
-
     }
 
     @Test
@@ -109,9 +104,7 @@ class JsonParserTest {
                 IllegalArgumentException.class,
                 () -> parser.parse("[3, 5, false, null"),
                 "Oh nooo! Not a Array");
-
     }
-
 
     @Test
     void emptyObject() {
@@ -137,8 +130,6 @@ class JsonParserTest {
                 IllegalArgumentException.class,
                 () -> parser.parse("{\"name\"\"value\"}"),
                 "Oh nooo!");
-
-
     }
 
     @Test
@@ -188,7 +179,6 @@ class JsonParserTest {
                 """));
     }
 
-
     @Test
     void objectFive() {
         Map<String, Object> expectedMap = new HashMap<>();
@@ -213,4 +203,21 @@ class JsonParserTest {
                 }
                 """));
     }
+
+    @Test
+    void objectExtra() {
+        Map<String, Object> expectedMap = new HashMap<>();
+//        expectedMap.put("key", "1");
+//        assertEquals(expectedMap, parser.parse("{\"key\":\"1\"}"));
+//        expectedMap.clear();
+//        expectedMap.put("name", 23);
+////        assertEquals(expectedMap, parser.parse("{\"name\":23}"));expectedMap.clear();
+//        expectedMap.put("name", 23.3);
+//        assertEquals(expectedMap, parser.parse("{\"name\":23.3}"));expectedMap.clear();
+        expectedMap.put("n", true);
+        assertEquals(expectedMap, parser.parse("{\"n\": true}"));expectedMap.clear();
+//        expectedMap.put("name", null);
+//        assertEquals(expectedMap, parser.parse("{\"name\":null}"));
+    }
+
 }
