@@ -41,6 +41,25 @@ public class JsonParser {
         throw new IllegalArgumentException("Oh nooo!");
     }
 
+    private List<Object> parseArray() throws IOException {
+        List<Object> a = new ArrayList<>();
+        var line = new StringBuilder();
+        int n;
+        while ((n = input.read()) != -1) {
+            if ((char) n == ']') {
+                if (!line.isEmpty()) a.add(parse(line.toString()));
+                break;
+            }
+            if (n == ',') {
+                a.add(parse(line.toString()));
+                line.setLength(0);
+            }
+            line.append((char) n);
+        }
+        if (n == -1) throw new IllegalArgumentException("Oh nooo! Not a Array");
+        return a;
+    }
+
     private Object parseObject() throws IOException {
         var map = new HashMap<String, Object>();
         char n = ' ';
@@ -78,34 +97,12 @@ public class JsonParser {
         throw new IllegalArgumentException("Oh nooo! No Null");
     }
 
-    private List<Object> parseArray() throws IOException {
-        List<Object> a = new ArrayList<>();
-        var line = new StringBuilder();
-//todo shorten the next if conditions if possible else not
-        int n;
-        while ((n = input.read()) != -1) {
-            if ((char) n == ']') {
-                if (!line.isEmpty()) a.add(parse(line.toString()));
-                break;
-            }
-
-            if (n == ',') {
-                a.add(parse(line.toString()));
-                line.setLength(0);
-            }
-            line.append((char) n);
-        }
-        if (n == -1) throw new IllegalArgumentException("Oh nooo! Not a Array");
-        return a;
-    }
-
     private Number readNumber(char first) throws IOException {
         var line = new StringBuilder();
         line.append(first);
         int n;
 
         input.mark(1);
-
         while ((n = input.read()) != -1) {
             char c = (char) n;
             if (c == '}' || c == ']') input.reset();
@@ -113,7 +110,6 @@ public class JsonParser {
             else if (!Character.isDigit(c)) break;
             if (Character.isDigit(c)) line.append(c);
             input.mark(1);
-
         }
         return parseNumber(line);
     }
@@ -122,12 +118,10 @@ public class JsonParser {
         int dots = (int) line.toString().chars().filter(c -> c == '.').count();
         if (!line.toString().contains(".")) {
             return Integer.valueOf(line.toString());
-        } else if (dots == 1 && !(line.toString().toCharArray()[0]=='-' && line.toString().toCharArray()[1]=='.')
-        ) {
+        } else if (dots == 1 && !(line.toString().toCharArray()[0] == '-' && line.toString().toCharArray()[1] == '.')) {
             return Double.valueOf(line.toString());
-        } else {
-            throw new IllegalArgumentException("Oh nooo! Not a number");
         }
+        throw new IllegalArgumentException("Oh nooo! Not a number");
     }
 
     private String parseString() throws IOException {

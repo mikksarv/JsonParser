@@ -105,7 +105,6 @@ class JsonParserTest {
         assertEquals("Oh nooo! Not a Array",
                 assertThrows(IllegalArgumentException.class, () ->
                         JsonParser.parse("[3, 5, false, null")).getMessage());
-
     }
 
     @Test
@@ -230,5 +229,4 @@ class JsonParserTest {
         expectedMap.put("name", 23.35);
         assertEquals(expectedMap, JsonParser.parse("{\"name\":23.35}"));
     }
-
 }
