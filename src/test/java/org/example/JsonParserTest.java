@@ -9,6 +9,7 @@ import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 class JsonParserTest {
+
     @Test
     void jsonNull() {
         assertNull(JsonParser.parse("null"));
@@ -22,7 +23,6 @@ class JsonParserTest {
         assertEquals("Oh nooo! No Null",
                 assertThrows(IllegalArgumentException.class, () ->
                         JsonParser.parse("nulla")).getMessage());
-
     }
 
     @Test
@@ -76,8 +76,6 @@ class JsonParserTest {
         assertEquals("Oh nooo! Not a String",
                 assertThrows(IllegalArgumentException.class, () ->
                         JsonParser.parse("hello\"")).getMessage());
-
-
     }
 
     @Test
@@ -134,13 +132,9 @@ class JsonParserTest {
                 IllegalArgumentException.class,
                 () -> JsonParser.parse("{\"name\"\"value\"}"),
                 "Oh nooo!");
-        assertEquals("Oh nooo!",
+        assertEquals("Oh nooo! Not a Map",
                 assertThrows(IllegalArgumentException.class, () ->
                         JsonParser.parse("{\"name\":\"value\"")).getMessage());
-        //todo "Oh nooo! Not a Map" not working
-//        assertEquals("Oh nooo! Not a Map",
-//                assertThrows(IllegalArgumentException.class, () ->
-//                        JsonParser.parse("{345qergz}")).getMessage());
     }
 
     @Test

@@ -10,7 +10,6 @@ import java.util.List;
 /// * language=json */
 public class JsonParser {
     private Reader input;
-    private char previous;
 
     public JsonParser(Reader input) {
         this.input = input;
@@ -52,10 +51,9 @@ public class JsonParser {
             map.put(key, parse());
 
             n = (char) input.read();
+            if (n == Character.MAX_VALUE) throw new IllegalArgumentException("Oh nooo! Not a Map");
             if (n == ',') n = (char) input.read();
         }
-
-        if (n == Character.MAX_VALUE) throw new IllegalArgumentException("Oh nooo! Not a Map");
         return map;
     }
 
@@ -65,7 +63,6 @@ public class JsonParser {
         }
         throw new IllegalArgumentException("Oh nooo! Not true");
     }
-
 
     private Boolean parseFalse() throws IOException {
         if (input.read() == 'a' && input.read() == 'l' && input.read() == 's' && input.read() == 'e') {
