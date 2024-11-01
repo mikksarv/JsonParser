@@ -125,7 +125,8 @@ public class JsonParser {
         int dots = (int) line.toString().chars().filter(c -> c == '.').count();
         if (!line.toString().contains(".")) {
             return Integer.valueOf(line.toString());
-        } else if (dots == 1) {
+        } else if (dots == 1 && !(line.toString().toCharArray()[0]=='-' && line.toString().toCharArray()[1]=='.')
+        ) {
             return Double.valueOf(line.toString());
         } else {
             throw new IllegalArgumentException("Oh nooo! Not a number");

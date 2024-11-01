@@ -61,10 +61,9 @@ class JsonParserTest {
                 IllegalArgumentException.class,
                 () -> JsonParser.parse("--123"),
                 "Oh nooo! Not a number");
-        //todo .- case
-//        assertEquals("Oh nooo! Not a number",
-//                assertThrows(IllegalArgumentException.class, () ->
-//                        JsonParser.parse("-.1.67")).getMessage());
+        assertEquals("Oh nooo! Not a number",
+                assertThrows(IllegalArgumentException.class, () ->
+                        JsonParser.parse("-.167")).getMessage());
     }
 
     @Test
