@@ -84,7 +84,7 @@ public class JsonParser {
     private List<Object> parseArray() throws IOException {
         List<Object> a = new ArrayList<>();
         var line = new StringBuilder();
-
+//todo shorten the next if conditions if possible else not
         int n;
         while ((n = input.read()) != -1) {
             if ((char) n == ']') {

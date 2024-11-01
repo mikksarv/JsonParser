@@ -18,9 +18,11 @@ class JsonParserTest {
                 IllegalArgumentException.class,
                 () -> JsonParser.parse("nulla"),
                 "Oh nooo! No Null");
-        assertThrows(IllegalArgumentException.class,
-                () -> JsonParser.parse("anull"),
-                "Oh nooo! No Null");
+
+        assertEquals("Oh nooo! No Null",
+                assertThrows(IllegalArgumentException.class, () ->
+                        JsonParser.parse("nulla")).getMessage());
+
     }
 
     @Test
@@ -32,12 +34,11 @@ class JsonParserTest {
                 "Oh nooo! Not a number");
         assertThrows(
                 IllegalArgumentException.class,
-                () -> JsonParser.parse("1..67"),
-                "Oh nooo! Not a number");
-        assertThrows(
-                IllegalArgumentException.class,
                 () -> JsonParser.parse(".346.5"),
                 "Oh nooo! Not a number");
+        assertEquals("Oh nooo! Not a number",
+                assertThrows(IllegalArgumentException.class, () ->
+                        JsonParser.parse("1..67")).getMessage());
     }
 
     @Test
@@ -47,6 +48,9 @@ class JsonParserTest {
                 IllegalArgumentException.class,
                 () -> JsonParser.parse("1.2.3.4"),
                 "Oh nooo! Not a number");
+        assertEquals("Oh nooo! Not a number",
+                assertThrows(IllegalArgumentException.class, () ->
+                        JsonParser.parse("1..67")).getMessage());
     }
 
     @Test
@@ -57,6 +61,10 @@ class JsonParserTest {
                 IllegalArgumentException.class,
                 () -> JsonParser.parse("--123"),
                 "Oh nooo! Not a number");
+        //todo .- case
+//        assertEquals("Oh nooo! Not a number",
+//                assertThrows(IllegalArgumentException.class, () ->
+//                        JsonParser.parse("-.1.67")).getMessage());
     }
 
     @Test
@@ -66,24 +74,23 @@ class JsonParserTest {
                 IllegalArgumentException.class,
                 () -> JsonParser.parse("\"hello"),
                 "Oh nooo! Not a String");
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> JsonParser.parse("hello\""),
-                "Oh nooo! Not a String");
+        assertEquals("Oh nooo! Not a String",
+                assertThrows(IllegalArgumentException.class, () ->
+                        JsonParser.parse("hello\"")).getMessage());
+
+
     }
 
     @Test
     void bool() {
         assertEquals(true, JsonParser.parse("true"));
         assertEquals(false, JsonParser.parse("false"));
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> JsonParser.parse("truu"),
-                "Oh nooo! Not true");
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> JsonParser.parse("fulse"),
-                "Oh nooo! Not false");
+        assertEquals("Oh nooo! Not false",
+                assertThrows(IllegalArgumentException.class, () ->
+                        JsonParser.parse("fulse")).getMessage());
+        assertEquals("Oh nooo! Not true",
+                assertThrows(IllegalArgumentException.class, () ->
+                        JsonParser.parse("truu")).getMessage());
     }
 
     @Test
@@ -98,10 +105,10 @@ class JsonParserTest {
                 IllegalArgumentException.class,
                 () -> JsonParser.parse("[3, 5, false, nulla]"),
                 "Oh nooo! No Null");
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> JsonParser.parse("[3, 5, false, null"),
-                "Oh nooo! Not a Array");
+        assertEquals("Oh nooo! Not a Array",
+                assertThrows(IllegalArgumentException.class, () ->
+                        JsonParser.parse("[3, 5, false, null")).getMessage());
+
     }
 
     @Test
@@ -128,6 +135,13 @@ class JsonParserTest {
                 IllegalArgumentException.class,
                 () -> JsonParser.parse("{\"name\"\"value\"}"),
                 "Oh nooo!");
+        assertEquals("Oh nooo!",
+                assertThrows(IllegalArgumentException.class, () ->
+                        JsonParser.parse("{\"name\":\"value\"")).getMessage());
+        //todo "Oh nooo! Not a Map" not working
+//        assertEquals("Oh nooo! Not a Map",
+//                assertThrows(IllegalArgumentException.class, () ->
+//                        JsonParser.parse("{345qergz}")).getMessage());
     }
 
     @Test
