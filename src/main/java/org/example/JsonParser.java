@@ -6,11 +6,11 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /// * language=json */
 public class JsonParser {
     private Reader input;
+    private char previous;
 
     public JsonParser(Reader input) {
         this.input = input;
@@ -37,9 +37,6 @@ public class JsonParser {
             if (c == 'f') return parseFalse();
             if (c == '{') return parseObject();
             if (c == '}') return "}";
-//            if (Character.isWhitespace(c)) {
-//                continue;
-//            }
             prev = c;
         }
         throw new IllegalArgumentException("Oh nooo!");
@@ -77,6 +74,13 @@ public class JsonParser {
         throw new IllegalArgumentException("Oh nooo! Not false");
     }
 
+    private Object parseNull() throws IOException {
+        if (input.read() == 'u' && input.read() == 'l' && input.read() == 'l') {
+            if (checkNextChar()) return null;
+        }
+        throw new IllegalArgumentException("Oh nooo! No Null");
+    }
+
     private List<Object> parseArray() throws IOException {
         List<Object> a = new ArrayList<>();
         var line = new StringBuilder();
@@ -98,13 +102,6 @@ public class JsonParser {
         return a;
     }
 
-    private Object parseNull() throws IOException {
-        if (input.read() == 'u' && input.read() == 'l' && input.read() == 'l') {
-            if (checkNextChar()) return null;
-        }
-        throw new IllegalArgumentException("Oh nooo! No Null");
-    }
-
     private Number parseNumber(char first) throws IOException {
         var line = new StringBuilder();
         line.append(first);
@@ -119,6 +116,7 @@ public class JsonParser {
     }
 
     private static Number parseNumber(StringBuilder line) {
+
         int dots = (int) line.toString().chars().filter(c -> c == '.').count();
         if (!line.toString().contains(".")) {
             return Integer.valueOf(line.toString());
@@ -143,7 +141,15 @@ public class JsonParser {
     }
 
     private boolean checkNextChar() throws IOException {
-        int nextChar = input.read();
-        return nextChar == -1 || (nextChar == ' ' || nextChar == ',' || nextChar == '\n' || nextChar == '}' || nextChar == ']');
+        input.mark(1);
+
+        char nextChar = (char) input.read();
+        if (nextChar == '}' || nextChar == ']') {
+            input.reset();
+            return true;
+        } else if (nextChar == Character.MAX_VALUE || nextChar == ' ' || nextChar == ',' || nextChar == '\n') {
+            return true;
+        }
+        return false;
     }
 }

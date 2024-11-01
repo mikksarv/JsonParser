@@ -208,14 +208,20 @@ class JsonParserTest {
 //        expectedMap.put("key", "1");
 //        assertEquals(expectedMap, JsonParser.parse("{\"key\":\"1\"}"));
 //        expectedMap.clear();
-//        expectedMap.put("name", 23);
-////        assertEquals(expectedMap, JsonParser.parse("{\"name\":23}"));expectedMap.clear();
-//        expectedMap.put("name", 23.3);
-//        assertEquals(expectedMap, JsonParser.parse("{\"name\":23.3}"));expectedMap.clear();
-        expectedMap.put("n", true);
-        assertEquals(expectedMap, JsonParser.parse("{\"n\": true}"));expectedMap.clear();
+//        expectedMap.put("n", true);
+//        assertEquals(expectedMap, JsonParser.parse("{\"n\":true}"));
+//        expectedMap.clear();
+//        expectedMap.put("n", false);
+//        assertEquals(expectedMap, JsonParser.parse("{\"n\":false}"));
+//        expectedMap.clear();
 //        expectedMap.put("name", null);
 //        assertEquals(expectedMap, JsonParser.parse("{\"name\":null}"));
+//        expectedMap.clear();
+        expectedMap.put("name", 23);
+        assertEquals(expectedMap, JsonParser.parse("{\"name\":23}"));
+        expectedMap.clear();
+        expectedMap.put("name", 23.3);
+        assertEquals(expectedMap, JsonParser.parse("{\"name\":23.3}"));
     }
 
 }
