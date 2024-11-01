@@ -30,7 +30,7 @@ public class JsonParser {
         while ((n = input.read()) != -1) {
             char c = (char) n;
             if (c == 'n' && prev == ' ') return parseNull();
-            if ((Character.isDigit(c) || c == '-') && prev == ' ') return parseNumber(c);
+            if ((Character.isDigit(c) || c == '-') && prev == ' ') return readNumber(c);
             if (c == '"') return parseString();
             if (c == '[' && prev == ' ') return parseArray();
             if (c == 't') return parseTrue();
@@ -102,21 +102,26 @@ public class JsonParser {
         return a;
     }
 
-    private Number parseNumber(char first) throws IOException {
+    private Number readNumber(char first) throws IOException {
         var line = new StringBuilder();
         line.append(first);
         int n;
+
+        input.mark(1);
+
         while ((n = input.read()) != -1) {
             char c = (char) n;
+            if (c == '}' || c == ']') input.reset();
             if (c == '.') line.append(c);
             else if (!Character.isDigit(c)) break;
             if (Character.isDigit(c)) line.append(c);
+            input.mark(1);
+
         }
         return parseNumber(line);
     }
 
     private static Number parseNumber(StringBuilder line) {
-
         int dots = (int) line.toString().chars().filter(c -> c == '.').count();
         if (!line.toString().contains(".")) {
             return Integer.valueOf(line.toString());
@@ -142,7 +147,6 @@ public class JsonParser {
 
     private boolean checkNextChar() throws IOException {
         input.mark(1);
-
         char nextChar = (char) input.read();
         if (nextChar == '}' || nextChar == ']') {
             input.reset();
