@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.example.JsonParserTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2024-11-01T11:39:25" hostname="vali-it-4" time="0.049">
+<testsuite name="org.example.JsonParserTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2024-11-01T12:47:20" hostname="vali-it-4" time="0.049">
   <properties/>
-  <testcase name="negativeNumbers()" classname="org.example.JsonParserTest" time="0.016"/>
+  <testcase name="negativeNumbers()" classname="org.example.JsonParserTest" time="0.017"/>
   <testcase name="jsonNull()" classname="org.example.JsonParserTest" time="0.002"/>
-  <testcase name="objectTwo()" classname="org.example.JsonParserTest" time="0.001"/>
-  <testcase name="objectExtra()" classname="org.example.JsonParserTest" time="0.002"/>
+  <testcase name="objectTwo()" classname="org.example.JsonParserTest" time="0.002"/>
+  <testcase name="objectExtra()" classname="org.example.JsonParserTest" time="0.001"/>
   <testcase name="objectThree()" classname="org.example.JsonParserTest" time="0.001"/>
-  <testcase name="object()" classname="org.example.JsonParserTest" time="0.001"/>
+  <testcase name="object()" classname="org.example.JsonParserTest" time="0.002"/>
   <testcase name="string()" classname="org.example.JsonParserTest" time="0.002"/>
   <testcase name="bool()" classname="org.example.JsonParserTest" time="0.002"/>
-  <testcase name="array()" classname="org.example.JsonParserTest" time="0.002"/>
-  <testcase name="doubleNumber()" classname="org.example.JsonParserTest" time="0.001"/>
-  <testcase name="emptyObject()" classname="org.example.JsonParserTest" time="0.002"/>
+  <testcase name="array()" classname="org.example.JsonParserTest" time="0.001"/>
+  <testcase name="doubleNumber()" classname="org.example.JsonParserTest" time="0.002"/>
+  <testcase name="emptyObject()" classname="org.example.JsonParserTest" time="0.001"/>
   <testcase name="objectFive()" classname="org.example.JsonParserTest" time="0.001"/>
-  <testcase name="objectFour()" classname="org.example.JsonParserTest" time="0.001"/>
+  <testcase name="objectFour()" classname="org.example.JsonParserTest" time="0.0"/>
   <testcase name="integer()" classname="org.example.JsonParserTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

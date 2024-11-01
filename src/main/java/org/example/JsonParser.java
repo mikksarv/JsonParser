@@ -9,7 +9,8 @@ import java.util.List;
 
 /// * language=json */
 public class JsonParser {
-    private Reader input;
+    private final Reader input;
+    private char c;
 
     public JsonParser(Reader input) {
         this.input = input;
@@ -24,10 +25,9 @@ public class JsonParser {
     }
 
     public Object parse() throws IOException {
-        int n;
+
         char prev = ' ';
-        while ((n = input.read()) != -1) {
-            char c = (char) n;
+        while ((c = (char) input.read()) != Character.MAX_VALUE) {
             if (c == 'n' && prev == ' ') return parseNull();
             if ((Character.isDigit(c) || c == '-') && prev == ' ') return readNumber(c);
             if (c == '"') return parseString();
@@ -44,34 +44,33 @@ public class JsonParser {
     private List<Object> parseArray() throws IOException {
         List<Object> a = new ArrayList<>();
         var line = new StringBuilder();
-        int n;
-        while ((n = input.read()) != -1) {
-            if ((char) n == ']') {
+
+        while ((c = (char) input.read()) != Character.MAX_VALUE) {
+            if (c == ']') {
                 if (!line.isEmpty()) a.add(parse(line.toString()));
                 break;
             }
-            if (n == ',') {
+            if (c == ',') {
                 a.add(parse(line.toString()));
                 line.setLength(0);
             }
-            line.append((char) n);
+            line.append(c);
         }
-        if (n == -1) throw new IllegalArgumentException("Oh nooo! Not a Array");
+        if (c == Character.MAX_VALUE) throw new IllegalArgumentException("Oh nooo! Not a Array");
         return a;
     }
 
     private Object parseObject() throws IOException {
         var map = new HashMap<String, Object>();
-        char n = ' ';
-        while (n != '}') {
+
+        while (c != '}') {
             String key = (String) parse();
             if (key.equals("}")) return map;
             input.read();
             map.put(key, parse());
-
-            n = (char) input.read();
-            if (n == Character.MAX_VALUE) throw new IllegalArgumentException("Oh nooo! Not a Map");
-            if (n == ',') n = (char) input.read();
+            c = (char) input.read();
+            if (c == Character.MAX_VALUE) throw new IllegalArgumentException("Oh nooo! Not a Map");
+            if (c == ',') c = (char) input.read();
         }
         return map;
     }
@@ -100,16 +99,13 @@ public class JsonParser {
     private Number readNumber(char first) throws IOException {
         var line = new StringBuilder();
         line.append(first);
-        int n;
 
         input.mark(1);
-        while ((n = input.read()) != -1) {
-            char c = (char) n;
+        while ((c = (char) input.read()) != Character.MAX_VALUE) {
             if (c == '}' || c == ']') input.reset();
             if (c == '.') line.append(c);
             else if (!Character.isDigit(c)) break;
             if (Character.isDigit(c)) line.append(c);
-            input.mark(1);
         }
         return parseNumber(line);
     }
@@ -126,13 +122,12 @@ public class JsonParser {
 
     private String parseString() throws IOException {
         var line = new StringBuilder();
-        int n;
 
-        while ((n = input.read()) != -1) {
-            if ((char) n == '"') break;
-            line.append((char) n);
+        while ((c = (char) input.read()) != Character.MAX_VALUE) {
+            if (c == '"') break;
+            line.append(c);
         }
-        if (n == -1) throw new IllegalArgumentException("Oh nooo! Not a String");
+        if (c == Character.MAX_VALUE) throw new IllegalArgumentException("Oh nooo! Not a String");
 
         return line.toString();
     }
@@ -143,9 +138,7 @@ public class JsonParser {
         if (nextChar == '}' || nextChar == ']') {
             input.reset();
             return true;
-        } else if (nextChar == Character.MAX_VALUE || nextChar == ' ' || nextChar == ',' || nextChar == '\n') {
-            return true;
-        }
-        return false;
+        } else return nextChar == Character.MAX_VALUE || nextChar == ' ' || nextChar == ',' || nextChar == '\n';
     }
 }
+
